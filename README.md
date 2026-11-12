@@ -69,7 +69,7 @@ Requires Java 17 or newer. Nothing else to install: the three jars are in `lib/`
 Try it on the sample photo, from the terminal:
 
 ```bash
-./thanos cut samples/astronaut.png --scribbles samples/astronaut-scribbles.png --out astronaut-cutout.png
+./thanos cut samples/astronaut/photo.png --scribbles samples/astronaut/scribbles.png --out astronaut.png
 ```
 
 Or in the window:
@@ -112,7 +112,7 @@ thanos/
 │   ├── cli/                   # `thanos` and `thanos cut` (picocli), in English
 │   └── ui/                    # `thanos ui` (Swing + FlatLaf), in Portuguese
 ├── src/test/java/thanos/      # JUnit tests, including the dependency rules
-├── samples/                   # A photo, its scribbles and the cutout
+├── samples/                   # Four photos, each with its scribbles and cutout
 ├── lib/                       # picocli, FlatLaf, JUnit
 └── .docs/                     # Scope, graph model, roadmap, decisions
 ```
