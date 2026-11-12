@@ -1,0 +1,19 @@
+#!/bin/sh
+# Compiles the application and its tests, then runs every test.
+set -e
+cd "$(dirname "$0")"
+
+./build > /dev/null
+
+JUNIT=$(ls lib/test/junit-platform-console-standalone-*.jar)
+
+rm -rf out/test
+mkdir -p out/test
+javac --release 17 -cp "out/main:lib/*:$JUNIT" -d out/test $(find src/test/java -name "*.java")
+
+java -jar "$JUNIT" execute \
+    --class-path "out/main:out/test:lib/*" \
+    --scan-class-path out/test \
+    --disable-banner \
+    --details=tree \
+    --fail-if-no-tests

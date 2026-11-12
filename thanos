@@ -1,0 +1,20 @@
+#!/bin/sh
+# Launcher: runs Thanos from anywhere, also through a symlink on the PATH.
+set -e
+
+SOURCE="$0"
+while [ -L "$SOURCE" ]; do
+    DIR="$(cd "$(dirname "$SOURCE")" && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    case "$SOURCE" in
+        /*) ;;
+        *) SOURCE="$DIR/$SOURCE" ;;
+    esac
+done
+HOME_DIR="$(cd "$(dirname "$SOURCE")" && pwd)"
+
+if [ ! -d "$HOME_DIR/out/main" ]; then
+    "$HOME_DIR/build" > /dev/null
+fi
+
+exec java -cp "$HOME_DIR/out/main:$HOME_DIR/lib/*" thanos.Main "$@"

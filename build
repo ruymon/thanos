@@ -1,0 +1,10 @@
+#!/bin/sh
+# Compiles the application into out/main.
+set -e
+cd "$(dirname "$0")"
+
+rm -rf out/main
+mkdir -p out/main
+javac --release 17 -Xlint:all -cp "lib/*" -d out/main $(find src/main/java -name "*.java")
+
+echo "Built into out/main"
