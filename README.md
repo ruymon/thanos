@@ -27,9 +27,30 @@ Full model in [.docs/graph-model.md](.docs/graph-model.md).
 | Layer | Technology |
 |---|---|
 | Language | Java 17+ |
-| UI | Swing (hand-coded) |
-| Image I/O | `javax.imageio` |
-| Dependencies | None |
+| Engine (graph, segmentation, image) | JDK only, no libraries |
+| Command line | picocli |
+| Window | Swing (hand-coded) + FlatLaf |
+| Tests | JUnit 5 |
+| Build | `javac`, no build tool |
+
+Libraries are allowed only at the edges. See [ADR 0007](.docs/adr/0007-libraries-only-at-the-edges.md).
+
+---
+
+## Usage
+
+```
+thanos                 Print the help
+thanos ui              Open the window
+thanos cut <photo>     Cut from the terminal
+```
+
+Both tuning parameters have two names:
+
+| What it does | Option | Maths name |
+|---|---|---|
+| How much the cut resists separating neighbours | `--smoothness` | `--lambda` |
+| How small a colour change counts as an edge | `--edge-sensitivity` | `--sigma` |
 
 ---
 
@@ -47,6 +68,8 @@ _Coming with the first build._
 | [.docs/graph-model.md](.docs/graph-model.md) | How an image becomes a flow network |
 | [.docs/roadmap.md](.docs/roadmap.md) | Ordered build plan |
 | [.docs/pitch.md](.docs/pitch.md) | One-page technical pitch |
+| [.docs/adr/](.docs/adr/) | Architecture decisions and why each was taken |
+| [GLOSSARY.md](GLOSSARY.md) | The words used in the code, the CLI, the UI and the docs |
 
 ---
 

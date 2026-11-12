@@ -33,15 +33,17 @@ Ideas considered and dropped: election analysis (statistics, not graphs), Huffma
 ## Out of scope
 
 - Neural networks or any learned model
-- External libraries of any kind
+- Libraries inside the engine (graph, segmentation, image)
 - Full-resolution cuts (the cut runs on a downscaled copy, at most 400 px on the longest side)
 - Video, batch processing, undo history
 - Soft edges (hair, fur): the cut is binary
 
 ## Constraints
 
-- Plain Java (JDK only): Swing for the UI, `javax.imageio` for files
-- No build tool: compiles with `javac`, runs with `java`
+- The engine is plain Java (JDK only). Libraries are allowed only at the edges: picocli for the command line, FlatLaf for the window, JUnit for tests
+- Two front ends over one engine: a command line and a window
+- Both tuning parameters (smoothness, edge sensitivity) are adjustable from both front ends
+- No build tool: compiles with `javac`, runs through a `thanos` launcher script
 - A cut must finish in about 2 seconds on a 400 px image, so the demo feels live
 
 ## Principle

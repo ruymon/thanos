@@ -23,18 +23,25 @@ Ordered build plan. Each step is usable on its own before the next starts.
 - [ ] Terminal links from the histograms, hard constraints on scribbled pixels
 - [ ] Mask from the cut, scaled back to the original resolution
 
-## 5. Interface
-- [ ] Window: open image
-- [ ] Brushes: subject, background, eraser
-- [ ] Cut button, result over a checkerboard
-- [ ] Refine: more scribbles, cut again
-- [ ] Export PNG with transparency
+## 5. Command line
+- [ ] `thanos` launcher and `build` script
+- [ ] `thanos` alone prints the help
+- [ ] `thanos cut <photo> --scribbles <file> --out <file>`
+- [ ] `--smoothness` / `--lambda` and `--edge-sensitivity` / `--sigma`
 
-## 6. Tuning
+## 6. Window
+- [ ] `thanos ui`: open image
+- [ ] Brushes: subject, background, eraser
+- [ ] Sliders: smoothness and edge sensitivity
+- [ ] Snap button, cutout over a checkerboard, cut time
+- [ ] Refine: more scribbles, snap again
+- [ ] Export PNG with transparency, save scribbles
+
+## 7. Tuning
 - [ ] Calibrate `λ` and `σ` on the sample images
 - [ ] Cut time under 2 s at 400 px
 
-## 7. Delivery
+## 8. Delivery
 - [ ] README: how to run, screenshots
 - [ ] Written survey: "Graphs and their applications"
 - [ ] Slides: image → pixels → graph → cut
