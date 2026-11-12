@@ -8,3 +8,6 @@ out/
 samples/professor/
 samples/wazowski/
 samples/chupeta/
+
+# Delivery package, built from the repository
+*.zip

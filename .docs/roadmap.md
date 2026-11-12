@@ -43,8 +43,8 @@ Ordered build plan. Each step is usable on its own before the next starts.
 
 ## 8. Delivery
 - [x] README: how to run
-- [ ] Written survey: "Graphs and their applications"
-- [ ] Slides: image → pixels → graph → cut
+- [x] Written report with the survey "Graphs and their applications": `.docs/report/`
+- [x] Slides: image → pixels → graph → cut: `.docs/slides/`
 - [ ] Live demo rehearsal
 
 ## Stretch (only if everything above is done)

@@ -114,7 +114,7 @@ thanos/
 ├── src/test/java/thanos/      # JUnit tests, including the dependency rules
 ├── samples/                   # Demo photos, each with its scribbles, cutout and command
 ├── lib/                       # picocli, FlatLaf, JUnit
-└── .docs/                     # Scope, graph model, roadmap, decisions
+└── .docs/                     # Scope, graph model, decisions, report, slides
 ```
 
 Dependencies point one way: `cli` / `ui` → `segmentation` → `graph`. The `graph` package knows nothing about images, and a test fails the build if that ever changes.
@@ -130,6 +130,8 @@ Dependencies point one way: `cli` / `ui` → `segmentation` → `graph`. The `gr
 | [.docs/roadmap.md](.docs/roadmap.md) | Ordered build plan |
 | [.docs/pitch.md](.docs/pitch.md) | One-page technical pitch |
 | [.docs/adr/](.docs/adr/) | Architecture decisions and why each was taken |
+| [.docs/report/relatorio.pdf](.docs/report/relatorio.pdf) | Written report, in Portuguese: graphs and their applications, the model, the implementation |
+| [.docs/slides/](.docs/slides/) | Class presentation as PowerPoint, PDF and a self-contained web page |
 | [GLOSSARY.md](GLOSSARY.md) | The words used in the code, the CLI, the UI and the docs |
 
 ---
