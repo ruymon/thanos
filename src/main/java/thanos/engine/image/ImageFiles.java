@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import javax.imageio.ImageIO;
 
 public final class ImageFiles {
@@ -12,7 +13,9 @@ public final class ImageFiles {
 
     private ImageFiles() {}
 
-    /** @throws IOException if the file is missing or is not an image Java can decode */
+    /**
+     * @throws IOException if the file is missing or is not an image Java can decode
+     */
     public static BufferedImage read(Path file) throws IOException {
         if (!Files.isRegularFile(file)) {
             throw new IOException("No such file: " + file);

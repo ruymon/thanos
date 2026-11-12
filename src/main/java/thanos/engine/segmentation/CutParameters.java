@@ -1,6 +1,7 @@
 package thanos.engine.segmentation;
 
-import thanos.config.EngineConfig;
+import static thanos.config.EngineConfig.DEFAULT_EDGE_SENSITIVITY;
+import static thanos.config.EngineConfig.DEFAULT_SMOOTHNESS;
 
 /**
  * The two values the user tunes.
@@ -12,15 +13,15 @@ public record CutParameters(double smoothness, double edgeSensitivity) {
 
     public CutParameters {
         if (smoothness < 0) {
-            throw new IllegalArgumentException("Smoothness must not be negative: " + smoothness);
+            throw new IllegalArgumentException("Invalid smoothness: " + smoothness);
         }
 
         if (edgeSensitivity <= 0) {
-            throw new IllegalArgumentException("Edge sensitivity must be positive: " + edgeSensitivity);
+            throw new IllegalArgumentException("Invalid edge sensitivity: " + edgeSensitivity);
         }
     }
 
     public static CutParameters defaults() {
-        return new CutParameters(EngineConfig.DEFAULT_SMOOTHNESS, EngineConfig.DEFAULT_EDGE_SENSITIVITY);
+        return new CutParameters(DEFAULT_SMOOTHNESS, DEFAULT_EDGE_SENSITIVITY);
     }
 }

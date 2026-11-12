@@ -4,11 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Random;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.Random;
+import java.util.stream.Stream;
 
 class MaxFlowSolverTest {
 
@@ -52,7 +53,9 @@ class MaxFlowSolverTest {
         assertFalse(cut.isOnSourceSide(2));
     }
 
-    /** The flow network of CLRS, Introduction to Algorithms, figure 26.1. Its maximum flow is 23. */
+    /**
+     * The flow network of CLRS, Introduction to Algorithms, figure 26.1. Its maximum flow is 23.
+     */
     @ParameterizedTest
     @MethodSource("solvers")
     void solvesTheTextbookNetwork(MaxFlowSolver solver) {
@@ -110,7 +113,8 @@ class MaxFlowSolverTest {
             }
 
             final MinCut dinic = new DinicMaxFlow().solve(forDinic, 0, vertexCount - 1);
-            final MinCut edmondsKarp = new EdmondsKarpMaxFlow().solve(forEdmondsKarp, 0, vertexCount - 1);
+            final MinCut edmondsKarp =
+                    new EdmondsKarpMaxFlow().solve(forEdmondsKarp, 0, vertexCount - 1);
 
             assertEquals(edmondsKarp.value(), dinic.value(), "round " + round);
         }

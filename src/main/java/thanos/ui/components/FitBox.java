@@ -1,5 +1,11 @@
 package thanos.ui.components;
 
+import thanos.ui.Theme;
+
+import java.awt.image.BufferedImage;
+
+import javax.swing.JComponent;
+
 /**
  * Where an image lands when it is drawn as large as possible inside a panel, centred and without
  * distortion.
@@ -8,15 +14,19 @@ package thanos.ui.components;
  */
 record FitBox(int x, int y, int width, int height, double scale) {
 
-    static FitBox of(int panelWidth, int panelHeight, int imageWidth, int imageHeight, int padding) {
-        final double availableWidth = Math.max(1, panelWidth - 2 * padding);
-        final double availableHeight = Math.max(1, panelHeight - 2 * padding);
-        final double scale = Math.min(availableWidth / imageWidth, availableHeight / imageHeight);
+    static FitBox of(JComponent panel, BufferedImage image) {
+        final double availableWidth = Math.max(1, panel.getWidth() - 2 * Theme.SPACE_MD);
+        final double availableHeight = Math.max(1, panel.getHeight() - 2 * Theme.SPACE_MD);
+        final double widthScale = availableWidth / image.getWidth();
+        final double heightScale = availableHeight / image.getHeight();
+        final double scale = Math.min(widthScale, heightScale);
 
-        final int width = (int) Math.round(imageWidth * scale);
-        final int height = (int) Math.round(imageHeight * scale);
+        final int width = (int) Math.round(image.getWidth() * scale);
+        final int height = (int) Math.round(image.getHeight() * scale);
+        final int x = (panel.getWidth() - width) / 2;
+        final int y = (panel.getHeight() - height) / 2;
 
-        return new FitBox((panelWidth - width) / 2, (panelHeight - height) / 2, width, height, scale);
+        return new FitBox(x, y, width, height, scale);
     }
 
     int toImageX(int panelX) {

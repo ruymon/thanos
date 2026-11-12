@@ -3,6 +3,7 @@ package thanos.cli;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
+
 import thanos.config.AppConfig;
 
 @Command(
@@ -21,8 +22,7 @@ import thanos.config.AppConfig;
         footer = {"", "Run 'thanos <command> --help' for the options of a command."})
 final class RootCommand implements Runnable {
 
-    @Spec
-    private CommandSpec spec;
+    @Spec private CommandSpec spec;
 
     @Override
     public void run() {

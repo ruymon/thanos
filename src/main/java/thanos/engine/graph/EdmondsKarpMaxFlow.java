@@ -5,8 +5,8 @@ import java.util.Arrays;
 /**
  * Edmonds-Karp, {@code O(V·E²)}: the textbook baseline.
  *
- * <p>Finds one shortest augmenting path per breadth-first search and saturates it. Simple and
- * slow, kept to cross-check {@link DinicMaxFlow} and to time against it.
+ * <p>Finds one shortest augmenting path per breadth-first search and saturates it. Simple and slow,
+ * kept to cross-check {@link DinicMaxFlow} and to time against it.
  */
 public final class EdmondsKarpMaxFlow implements MaxFlowSolver {
 
@@ -14,65 +14,93 @@ public final class EdmondsKarpMaxFlow implements MaxFlowSolver {
 
     @Override
     public MinCut solve(FlowNetwork network, int source, int sink) {
-        final ResidualSearch search = new ResidualSearch(network);
+        final long flow = source == sink ? 0 : new Run(network, source, sink).maxFlow();
 
-        if (source == sink) {
-            return search.findMinCut(source, 0);
-        }
-
-        final int[] parentEdge = new int[network.vertexCount()];
-        final int[] queue = new int[network.vertexCount()];
-
-        long flow = 0;
-
-        while (findShortestPath(network, source, sink, parentEdge, queue)) {
-            flow += augment(network, source, sink, parentEdge);
-        }
-
-        return search.findMinCut(source, flow);
+        return new ResidualSearch(network).findMinCut(source, flow);
     }
 
-    private static boolean findShortestPath(
-            FlowNetwork network, int source, int sink, int[] parentEdge, int[] queue) {
-        Arrays.fill(parentEdge, NO_PARENT);
+    /** The working state of one solve, so the solver itself stays stateless. */
+    private static final class Run {
 
-        int head = 0;
-        int tail = 0;
-        queue[tail++] = source;
+        private final FlowNetwork network;
+        private final int source;
+        private final int sink;
 
-        while (head < tail) {
-            final int vertex = queue[head++];
+        /** For each vertex, the edge the search arrived through. */
+        private final int[] parentEdge;
 
-            for (int edge = network.firstEdgeOf(vertex); edge != FlowNetwork.NO_EDGE; edge = network.nextEdgeAfter(edge)) {
-                final int neighbour = network.targetOf(edge);
-                final boolean isNew = neighbour != source && parentEdge[neighbour] == NO_PARENT;
+        private final int[] queue;
 
-                if (network.residualOf(edge) > 0 && isNew) {
-                    parentEdge[neighbour] = edge;
+        Run(FlowNetwork network, int source, int sink) {
+            this.network = network;
+            this.source = source;
+            this.sink = sink;
+            this.parentEdge = new int[network.vertexCount()];
+            this.queue = new int[network.vertexCount()];
+        }
 
-                    if (neighbour == sink) {
-                        return true;
+        long maxFlow() {
+            long flow = 0;
+
+            while (findShortestPath()) {
+                flow += augment();
+            }
+
+            return flow;
+        }
+
+        private boolean findShortestPath() {
+            Arrays.fill(parentEdge, NO_PARENT);
+
+            int head = 0;
+            int tail = 0;
+            queue[tail++] = source;
+
+            while (head < tail) {
+                final int vertex = queue[head++];
+                int edge = network.firstEdgeOf(vertex);
+
+                while (edge != FlowNetwork.NO_EDGE) {
+                    final int neighbour = network.targetOf(edge);
+
+                    if (network.residualOf(edge) > 0 && isUnvisited(neighbour)) {
+                        parentEdge[neighbour] = edge;
+
+                        if (neighbour == sink) {
+                            return true;
+                        }
+
+                        queue[tail++] = neighbour;
                     }
 
-                    queue[tail++] = neighbour;
+                    edge = network.nextEdgeAfter(edge);
                 }
             }
+
+            return false;
         }
 
-        return false;
-    }
-
-    private static int augment(FlowNetwork network, int source, int sink, int[] parentEdge) {
-        int bottleneck = Integer.MAX_VALUE;
-
-        for (int vertex = sink; vertex != source; vertex = network.targetOf(parentEdge[vertex] ^ 1)) {
-            bottleneck = Math.min(bottleneck, network.residualOf(parentEdge[vertex]));
+        private boolean isUnvisited(int vertex) {
+            return vertex != source && parentEdge[vertex] == NO_PARENT;
         }
 
-        for (int vertex = sink; vertex != source; vertex = network.targetOf(parentEdge[vertex] ^ 1)) {
-            network.push(parentEdge[vertex], bottleneck);
+        /** Walks the path back from the sink twice: to find its narrowest edge, then to fill it. */
+        private int augment() {
+            int bottleneck = Integer.MAX_VALUE;
+
+            for (int vertex = sink; vertex != source; vertex = previousOf(vertex)) {
+                bottleneck = Math.min(bottleneck, network.residualOf(parentEdge[vertex]));
+            }
+
+            for (int vertex = sink; vertex != source; vertex = previousOf(vertex)) {
+                network.push(parentEdge[vertex], bottleneck);
+            }
+
+            return bottleneck;
         }
 
-        return bottleneck;
+        private int previousOf(int vertex) {
+            return network.sourceOf(parentEdge[vertex]);
+        }
     }
 }

@@ -4,8 +4,8 @@ package thanos.ui;
 public final class Texts {
 
     public static final String OPEN_IMAGE = "Abrir imagem";
-    public static final String SUBJECT_BRUSH = "Objeto";
-    public static final String BACKGROUND_BRUSH = "Fundo";
+    public static final String SUBJECT = "Objeto";
+    public static final String BACKGROUND = "Fundo";
     public static final String ERASER = "Borracha";
     public static final String CLEAR = "Limpar";
     public static final String SAVE_SCRIBBLES = "Salvar riscos";
@@ -15,18 +15,18 @@ public final class Texts {
     public static final String ORIGINAL_PANE = "Original + riscos";
     public static final String CUTOUT_PANE = "Recorte";
     public static final String SMOOTHNESS = "Suavidade (λ)";
-    public static final String EDGE_SENSITIVITY = "Sensibilidade à borda (σ)";
+    public static final String SENSITIVITY = "Sensibilidade à borda (σ)";
 
     public static final String CANVAS_EMPTY = "Abra uma imagem para começar";
     public static final String CUTOUT_EMPTY = "Risque o objeto e o fundo, depois clique em Snap";
 
-    public static final String READY_TO_SCRIBBLE = "Risque o objeto e o fundo, depois clique em Snap.";
+    public static final String HINT = "Risque o objeto e o fundo, depois clique em Snap.";
     public static final String SNAPPING = "Recortando…";
-    public static final String SNAP_REPORT = "Recorte em %.2f s  ·  %,d vértices  ·  %,d arestas  ·  %d × %d px";
+    public static final String REPORT = "Recorte em %.2f s · %,d vértices · %,d arestas · %s px";
     public static final String SAVED = "Salvo em %s";
 
     public static final String NO_PHOTO = "Abra uma imagem primeiro.";
-    public static final String NO_CUTOUT = "Clique em Snap antes de exportar: ainda não há recorte.";
+    public static final String NO_CUTOUT = "Clique em Snap antes de exportar.";
     public static final String MISSING_SUBJECT = "Risque o objeto antes de clicar em Snap.";
     public static final String MISSING_BACKGROUND = "Risque o fundo antes de clicar em Snap.";
     public static final String CANNOT_OPEN = "Não foi possível abrir a imagem. Use PNG ou JPEG.";

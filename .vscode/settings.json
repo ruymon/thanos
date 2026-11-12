@@ -1,0 +1,9 @@
+{
+  "java.project.sourcePaths": ["src/main/java", "src/test/java"],
+  "java.project.referencedLibraries": ["lib/**/*.jar"],
+  "java.project.outputPath": "out/ide",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "editor.rulers": [100],
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true
+}

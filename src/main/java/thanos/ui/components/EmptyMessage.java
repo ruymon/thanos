@@ -1,17 +1,21 @@
 package thanos.ui.components;
 
+import static java.awt.RenderingHints.KEY_TEXT_ANTIALIASING;
+import static java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON;
+
+import thanos.ui.Theme;
+
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+
 import javax.swing.JComponent;
-import thanos.ui.Theme;
 
 final class EmptyMessage {
 
     private EmptyMessage() {}
 
     static void paint(Graphics2D canvas, JComponent panel, String message) {
-        canvas.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        canvas.setRenderingHint(KEY_TEXT_ANTIALIASING, VALUE_TEXT_ANTIALIAS_ON);
         canvas.setFont(Theme.FONT_BASE);
         canvas.setColor(Theme.TEXT_MUTED);
 

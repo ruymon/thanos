@@ -33,18 +33,25 @@ final class ResidualSearch {
         while (head < tail) {
             final int vertex = queue[head++];
 
-            for (int edge = network.firstEdgeOf(vertex); edge != FlowNetwork.NO_EDGE; edge = network.nextEdgeAfter(edge)) {
+            int edge = network.firstEdgeOf(vertex);
+
+            while (edge != FlowNetwork.NO_EDGE) {
                 final int neighbour = network.targetOf(edge);
 
                 if (network.residualOf(edge) > 0 && level[neighbour] == UNREACHED) {
                     level[neighbour] = level[vertex] + 1;
                     queue[tail++] = neighbour;
                 }
+
+                edge = network.nextEdgeAfter(edge);
             }
         }
     }
 
-    /** The minimum cut once no more flow fits: vertices still reachable from the source are its side. */
+    /**
+     * The minimum cut once no more flow fits: vertices still reachable from the source are its
+     * side.
+     */
     MinCut findMinCut(int source, long flow) {
         final int[] level = findLevels(source);
         final boolean[] onSourceSide = new boolean[level.length];

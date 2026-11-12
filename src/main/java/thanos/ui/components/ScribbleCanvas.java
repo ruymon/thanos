@@ -1,26 +1,32 @@
 package thanos.ui.components;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.util.Optional;
-import javax.swing.JPanel;
+import static java.awt.RenderingHints.KEY_ANTIALIASING;
+import static java.awt.RenderingHints.KEY_INTERPOLATION;
+import static java.awt.RenderingHints.VALUE_ANTIALIAS_OFF;
+import static java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR;
+
 import thanos.engine.image.ImageScaler;
 import thanos.engine.segmentation.Scribbles;
 import thanos.ui.Texts;
 import thanos.ui.Theme;
 
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Optional;
+
+import javax.swing.JPanel;
+
 public final class ScribbleCanvas extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    /** Scribbles are drawn on a copy of the photo no larger than this, whatever the photo's size. */
+    /** Scribbles are drawn on a copy of the photo no larger than this, whatever its size. */
     private static final int MAX_DRAWING_SIDE = 900;
 
     private static final float BRUSH_SCREEN_WIDTH = 9f;
@@ -34,27 +40,16 @@ public final class ScribbleCanvas extends JPanel {
     private int lastY;
 
     public ScribbleCanvas() {
+        final Drawing drawing = new Drawing();
+
         setBackground(Theme.BG_CANVAS);
-
-        final MouseAdapter drawing = new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent event) {
-                startStroke(event);
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent event) {
-                continueStroke(event);
-            }
-        };
-
         addMouseListener(drawing);
         addMouseMotionListener(drawing);
     }
 
     public void setPhoto(BufferedImage newPhoto) {
         photo = ImageScaler.fitWithin(newPhoto, MAX_DRAWING_SIDE);
-        scribbleLayer = new BufferedImage(photo.getWidth(), photo.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        scribbleLayer = createEmptyLayer();
         repaint();
     }
 
@@ -63,16 +58,16 @@ public final class ScribbleCanvas extends JPanel {
     }
 
     public void clearScribbles() {
-        if (scribbleLayer == null) {
+        if (photo == null) {
             return;
         }
 
-        scribbleLayer = new BufferedImage(photo.getWidth(), photo.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        scribbleLayer = createEmptyLayer();
         repaint();
     }
 
     public Optional<Scribbles> findScribbles() {
-        if (scribbleLayer == null) {
+        if (photo == null) {
             return Optional.empty();
         }
 
@@ -87,16 +82,24 @@ public final class ScribbleCanvas extends JPanel {
 
         if (photo == null) {
             EmptyMessage.paint(canvas, this, Texts.CANVAS_EMPTY);
-            canvas.dispose();
-            return;
+        } else {
+            paintPhotoAndScribbles(canvas);
         }
 
-        final FitBox box = fitBox();
-        canvas.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        canvas.dispose();
+    }
+
+    private void paintPhotoAndScribbles(Graphics2D canvas) {
+        final FitBox box = FitBox.of(this, photo);
+
+        canvas.setRenderingHint(KEY_INTERPOLATION, VALUE_INTERPOLATION_BILINEAR);
         canvas.drawImage(photo, box.x(), box.y(), box.width(), box.height(), null);
         canvas.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, SCRIBBLE_OPACITY));
         canvas.drawImage(scribbleLayer, box.x(), box.y(), box.width(), box.height(), null);
-        canvas.dispose();
+    }
+
+    private BufferedImage createEmptyLayer() {
+        return new BufferedImage(photo.getWidth(), photo.getHeight(), BufferedImage.TYPE_INT_ARGB);
     }
 
     private void startStroke(MouseEvent event) {
@@ -104,7 +107,7 @@ public final class ScribbleCanvas extends JPanel {
             return;
         }
 
-        final FitBox box = fitBox();
+        final FitBox box = FitBox.of(this, photo);
         lastX = box.toImageX(event.getX());
         lastY = box.toImageY(event.getY());
         drawSegment(lastX, lastY, box);
@@ -115,17 +118,17 @@ public final class ScribbleCanvas extends JPanel {
             return;
         }
 
-        final FitBox box = fitBox();
+        final FitBox box = FitBox.of(this, photo);
         drawSegment(box.toImageX(event.getX()), box.toImageY(event.getY()), box);
     }
 
-    /** Draws from the last point to this one. Not antialiased: a scribble pixel is one pure colour. */
+    /** Draws from the last point to this one. Not antialiased: a scribble is one pure colour. */
     private void drawSegment(int x, int y, FitBox box) {
         final Graphics2D layer = scribbleLayer.createGraphics();
         final float screenWidth = brush == Brush.ERASER ? ERASER_SCREEN_WIDTH : BRUSH_SCREEN_WIDTH;
         final float width = (float) Math.max(1.0, screenWidth / box.scale());
 
-        layer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        layer.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_OFF);
         layer.setStroke(new BasicStroke(width, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
         switch (brush) {
@@ -142,7 +145,16 @@ public final class ScribbleCanvas extends JPanel {
         repaint();
     }
 
-    private FitBox fitBox() {
-        return FitBox.of(getWidth(), getHeight(), photo.getWidth(), photo.getHeight(), Theme.SPACE_MD);
+    private final class Drawing extends MouseAdapter {
+
+        @Override
+        public void mousePressed(MouseEvent event) {
+            startStroke(event);
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent event) {
+            continueStroke(event);
+        }
     }
 }

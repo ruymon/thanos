@@ -1,8 +1,10 @@
 package thanos.cli;
 
-import java.io.PrintWriter;
 import picocli.CommandLine;
+
 import thanos.engine.segmentation.Segmenter;
+
+import java.io.PrintWriter;
 
 public final class ThanosCli {
 
@@ -13,17 +15,21 @@ public final class ThanosCli {
      * @return the process exit code
      */
     public static int run(String[] arguments, Segmenter segmenter, Runnable windowLauncher) {
-        return run(arguments, segmenter, windowLauncher, new PrintWriter(System.out, true), new PrintWriter(System.err, true));
+        final PrintWriter output = new PrintWriter(System.out, true);
+        final PrintWriter errors = new PrintWriter(System.err, true);
+
+        return create(segmenter, windowLauncher, output, errors).execute(arguments);
     }
 
-    static int run(
-            String[] arguments, Segmenter segmenter, Runnable windowLauncher, PrintWriter output, PrintWriter errors) {
-        final CommandLine commandLine = new CommandLine(new RootCommand())
-                .addSubcommand(new CutCommand(segmenter))
-                .addSubcommand(new UiCommand(windowLauncher))
-                .setOut(output)
-                .setErr(errors);
+    static CommandLine create(
+            Segmenter segmenter, Runnable window, PrintWriter out, PrintWriter err) {
+        final CommandLine commandLine = new CommandLine(new RootCommand());
 
-        return commandLine.execute(arguments);
+        commandLine.addSubcommand(new CutCommand(segmenter));
+        commandLine.addSubcommand(new UiCommand(window));
+        commandLine.setOut(out);
+        commandLine.setErr(err);
+
+        return commandLine;
     }
 }

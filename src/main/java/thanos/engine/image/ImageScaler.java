@@ -1,14 +1,20 @@
 package thanos.engine.image;
 
+import static java.awt.RenderingHints.KEY_INTERPOLATION;
+import static java.awt.RenderingHints.KEY_RENDERING;
+import static java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR;
+import static java.awt.RenderingHints.VALUE_RENDER_QUALITY;
+
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 public final class ImageScaler {
 
     private ImageScaler() {}
 
-    /** The image itself if its longest side is at most {@code maxSide}, a smaller copy otherwise. */
+    /**
+     * The image itself if its longest side is at most {@code maxSide}, a smaller copy otherwise.
+     */
     public static BufferedImage fitWithin(BufferedImage image, int maxSide) {
         final int longestSide = Math.max(image.getWidth(), image.getHeight());
 
@@ -26,8 +32,8 @@ public final class ImageScaler {
         final BufferedImage scaled = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         final Graphics2D graphics = scaled.createGraphics();
 
-        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        graphics.setRenderingHint(KEY_INTERPOLATION, VALUE_INTERPOLATION_BILINEAR);
+        graphics.setRenderingHint(KEY_RENDERING, VALUE_RENDER_QUALITY);
         graphics.drawImage(image, 0, 0, width, height, null);
         graphics.dispose();
 

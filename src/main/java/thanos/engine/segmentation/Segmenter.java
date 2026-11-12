@@ -1,10 +1,11 @@
 package thanos.engine.segmentation;
 
-import java.awt.image.BufferedImage;
 import thanos.config.EngineConfig;
 import thanos.engine.graph.MaxFlowSolver;
 import thanos.engine.graph.MinCut;
 import thanos.engine.image.ImageScaler;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Separates the subject of a photo from its background.
@@ -39,15 +40,17 @@ public final class Segmenter {
         assertHas(workingScribbles, Label.SUBJECT);
         assertHas(workingScribbles, Label.BACKGROUND);
 
-        final PixelGraph graph = PixelGraph.of(pixels, width, height, workingScribbles, parameters);
-        final int vertexCount = graph.network().vertexCount();
-        final int edgeCount = graph.network().edgeCount();
+        final PixelGraph graph = PixelGraph.of(pixels, workingScribbles, parameters);
+        final int vertices = graph.network().vertexCount();
+        final int edges = graph.network().edgeCount();
         final MinCut cut = solver.solve(graph.network(), graph.source(), graph.sink());
 
         final Mask mask = maskOf(cut, width, height).scaledTo(photo.getWidth(), photo.getHeight());
-        final long elapsedMillis = (System.nanoTime() - startedAt) / NANOS_PER_MILLI;
+        final long millis = (System.nanoTime() - startedAt) / NANOS_PER_MILLI;
 
-        return new SnapResult(mask, new SnapStats(width, height, vertexCount, edgeCount, cut.value(), elapsedMillis));
+        final SnapStats stats = new SnapStats(width, height, vertices, edges, cut.value(), millis);
+
+        return new SnapResult(mask, stats);
     }
 
     /** Pixels still connected to the source after the cut are the subject. */

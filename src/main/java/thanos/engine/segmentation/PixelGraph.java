@@ -4,8 +4,8 @@ import thanos.config.EngineConfig;
 import thanos.engine.graph.FlowNetwork;
 
 /**
- * A photo as a flow network: one vertex per pixel, plus a source for the subject and a sink for
- * the background. See {@code .docs/graph-model.md}.
+ * A photo as a flow network: one vertex per pixel, plus a source for the subject and a sink for the
+ * background. See {@code .docs/graph-model.md}.
  */
 final class PixelGraph {
 
@@ -30,9 +30,11 @@ final class PixelGraph {
 
     /**
      * @param pixels the photo, row by row, as RGB
-     * @param scribbles scribbles at the photo's size, with at least one of each kind
+     * @param scribbles at the photo's size, with at least one scribble of each kind
      */
-    static PixelGraph of(int[] pixels, int width, int height, Scribbles scribbles, CutParameters parameters) {
+    static PixelGraph of(int[] pixels, Scribbles scribbles, CutParameters parameters) {
+        final int width = scribbles.width();
+        final int height = scribbles.height();
         final int pixelCount = width * height;
         final int source = pixelCount;
         final int sink = pixelCount + 1;
@@ -61,7 +63,9 @@ final class PixelGraph {
         return y * width + x;
     }
 
-    /** Links every pixel to its right and lower neighbours: expensive to cut where colours agree. */
+    /**
+     * Links every pixel to its right and lower neighbours: expensive to cut where colours agree.
+     */
     private void addNeighbourLinks(int[] pixels, int height, CutParameters parameters) {
         final double sigma = parameters.edgeSensitivity();
         final double falloff = 2 * sigma * sigma;
@@ -89,10 +93,13 @@ final class PixelGraph {
         network.addUndirectedEdge(a, b, capacity);
     }
 
-    /** Links every pixel to both terminals: scribbled pixels are pinned, the rest follow their colour. */
+    /**
+     * Links every pixel to both terminals: scribbled pixels are pinned, the rest follow their
+     * colour.
+     */
     private void addTerminalLinks(int[] pixels, int height, Scribbles scribbles) {
-        final ColorHistogram subjectColors = histogramOf(pixels, height, scribbles, Label.SUBJECT);
-        final ColorHistogram backgroundColors = histogramOf(pixels, height, scribbles, Label.BACKGROUND);
+        final ColorHistogram subject = histogramOf(pixels, height, scribbles, Label.SUBJECT);
+        final ColorHistogram background = histogramOf(pixels, height, scribbles, Label.BACKGROUND);
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -102,8 +109,9 @@ final class PixelGraph {
                     case SUBJECT -> network.addEdge(source, pixel, UNCUTTABLE);
                     case BACKGROUND -> network.addEdge(pixel, sink, UNCUTTABLE);
                     case NONE -> {
-                        network.addEdge(source, pixel, capacityOf(backgroundColors.surpriseOf(pixels[pixel])));
-                        network.addEdge(pixel, sink, capacityOf(subjectColors.surpriseOf(pixels[pixel])));
+                        final int color = pixels[pixel];
+                        network.addEdge(source, pixel, capacityOf(background.surpriseOf(color)));
+                        network.addEdge(pixel, sink, capacityOf(subject.surpriseOf(color)));
                     }
                 }
             }

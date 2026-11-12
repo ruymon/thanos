@@ -28,7 +28,9 @@ public final class FlowNetwork {
         this(vertexCount, INITIAL_EDGE_SLOTS);
     }
 
-    /** @param expectedEdges how many edges will be added, to allocate the arrays once */
+    /**
+     * @param expectedEdges how many edges will be added, to allocate the arrays once
+     */
     public FlowNetwork(int vertexCount, int expectedEdges) {
         if (vertexCount <= 0) {
             throw new IllegalArgumentException("A flow network needs at least one vertex");
@@ -74,6 +76,10 @@ public final class FlowNetwork {
         return target[edge];
     }
 
+    int sourceOf(int edge) {
+        return target[edge ^ 1];
+    }
+
     int residualOf(int edge) {
         return capacity[edge];
     }
@@ -115,7 +121,7 @@ public final class FlowNetwork {
 
     private void assertVertex(int vertex) {
         if (vertex < 0 || vertex >= vertexCount) {
-            throw new IllegalArgumentException("Vertex " + vertex + " is outside 0.." + (vertexCount - 1));
+            throw new IllegalArgumentException("No such vertex: " + vertex);
         }
     }
 

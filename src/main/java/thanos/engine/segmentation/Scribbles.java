@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 /**
  * The rough strokes the user draws to say "this is subject" or "this is background".
  *
- * <p>A grid of labels with its own size, independent of the photo: it is rescaled to whatever
- * size the cut runs on. As an image, a scribble is any opaque pixel: more red than blue means
- * subject, more blue than red means background.
+ * <p>A grid of labels with its own size, independent of the photo: it is rescaled to whatever size
+ * the cut runs on. As an image, a scribble is any opaque pixel: more red than blue means subject,
+ * more blue than red means background.
  */
 public final class Scribbles {
 
@@ -23,7 +23,7 @@ public final class Scribbles {
 
     public Scribbles(int width, int height) {
         if (width <= 0 || height <= 0) {
-            throw new IllegalArgumentException("Scribbles need a positive size: " + width + "x" + height);
+            throw new IllegalArgumentException("Invalid scribbles size: " + width + "x" + height);
         }
 
         this.width = width;
@@ -69,7 +69,9 @@ public final class Scribbles {
         return height;
     }
 
-    /** The same scribbles on a grid of another size. A labelled pixel always survives the resize. */
+    /**
+     * The same scribbles on a grid of another size. A labelled pixel always survives the resize.
+     */
     public Scribbles scaledTo(int newWidth, int newHeight) {
         if (newWidth == width && newHeight == height) {
             return this;

@@ -3,6 +3,10 @@ package thanos.ui;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+
 public final class Theme {
 
     public static final Color BG_WINDOW = new Color(0xFAFAF7);
@@ -15,8 +19,8 @@ public final class Theme {
     public static final Color ACCENT = new Color(0x22252A);
     public static final Color ON_ACCENT = new Color(0xFFFFFF);
 
-    public static final Color SUBJECT = new Color(0xE5482D);
-    public static final Color BACKGROUND = new Color(0x2D6CE5);
+    public static final Color SUBJECT_BRUSH = new Color(0xE5482D);
+    public static final Color BACKGROUND_BRUSH = new Color(0x2D6CE5);
 
     public static final Color CHECKER_LIGHT = new Color(0xFFFFFF);
     public static final Color CHECKER_DARK = new Color(0xE4E2DA);
@@ -25,6 +29,10 @@ public final class Theme {
     public static final int SPACE_SM = 8;
     public static final int SPACE_MD = 12;
     public static final int SPACE_LG = 20;
+
+    public static final Border PADDING = new EmptyBorder(SPACE_MD, SPACE_LG, SPACE_MD, SPACE_LG);
+    public static final Border LINE_ABOVE = new MatteBorder(1, 0, 0, 0, BORDER);
+    public static final Border LINE_BELOW = new MatteBorder(0, 0, 1, 0, BORDER);
 
     public static final int WINDOW_WIDTH = 1180;
     public static final int WINDOW_HEIGHT = 760;

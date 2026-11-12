@@ -5,6 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import thanos.engine.graph.DinicMaxFlow;
+import thanos.engine.segmentation.Label;
+import thanos.engine.segmentation.Scribbles;
+import thanos.engine.segmentation.Segmenter;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,14 +21,8 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.imageio.ImageIO;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import thanos.engine.graph.DinicMaxFlow;
-import thanos.engine.segmentation.Label;
-import thanos.engine.segmentation.Scribbles;
-import thanos.engine.segmentation.Segmenter;
 
 class ThanosCliTest {
 
@@ -28,8 +31,7 @@ class ThanosCliTest {
     private static final int ORANGE = 0xE08030;
     private static final int TEAL = 0x208090;
 
-    @TempDir
-    Path folder;
+    @TempDir Path folder;
 
     private final StringWriter output = new StringWriter();
     private final StringWriter errors = new StringWriter();
@@ -73,7 +75,14 @@ class ThanosCliTest {
 
     @Test
     void cutsAPhotoIntoATransparentPng() throws IOException {
-        final int exitCode = run("cut", photo.toString(), "--scribbles", scribbles.toString(), "--out", cutout.toString());
+        final int exitCode =
+                run(
+                        "cut",
+                        photo.toString(),
+                        "--scribbles",
+                        scribbles.toString(),
+                        "--out",
+                        cutout.toString());
 
         assertEquals(0, exitCode, errors.toString());
 
@@ -84,9 +93,18 @@ class ThanosCliTest {
 
     @Test
     void acceptsTheMathsNamesOfBothParameters() {
-        final int exitCode = run(
-                "cut", photo.toString(), "--scribbles", scribbles.toString(), "--out", cutout.toString(),
-                "--lambda", "30", "--sigma", "12");
+        final int exitCode =
+                run(
+                        "cut",
+                        photo.toString(),
+                        "--scribbles",
+                        scribbles.toString(),
+                        "--out",
+                        cutout.toString(),
+                        "--lambda",
+                        "30",
+                        "--sigma",
+                        "12");
 
         assertEquals(0, exitCode, errors.toString());
         assertTrue(output.toString().contains("30"));
@@ -95,9 +113,18 @@ class ThanosCliTest {
 
     @Test
     void acceptsThePlainNamesOfBothParameters() {
-        final int exitCode = run(
-                "cut", photo.toString(), "--scribbles", scribbles.toString(), "--out", cutout.toString(),
-                "--smoothness", "30", "--edge-sensitivity", "12");
+        final int exitCode =
+                run(
+                        "cut",
+                        photo.toString(),
+                        "--scribbles",
+                        scribbles.toString(),
+                        "--out",
+                        cutout.toString(),
+                        "--smoothness",
+                        "30",
+                        "--edge-sensitivity",
+                        "12");
 
         assertEquals(0, exitCode, errors.toString());
         assertTrue(output.toString().contains("30"));
@@ -114,7 +141,12 @@ class ThanosCliTest {
 
     @Test
     void failsWithAMessageWhenThePhotoDoesNotExist() {
-        final int exitCode = run("cut", folder.resolve("missing.png").toString(), "--scribbles", scribbles.toString());
+        final int exitCode =
+                run(
+                        "cut",
+                        folder.resolve("missing.png").toString(),
+                        "--scribbles",
+                        scribbles.toString());
 
         assertNotEquals(0, exitCode);
         assertTrue(errors.toString().contains("missing.png"));
@@ -132,11 +164,10 @@ class ThanosCliTest {
     private int run(String... arguments) {
         final Segmenter segmenter = new Segmenter(new DinicMaxFlow());
 
-        return ThanosCli.run(
-                arguments,
-                segmenter,
-                () -> windowOpened.set(true),
-                new PrintWriter(output, true),
-                new PrintWriter(errors, true));
+        final PrintWriter out = new PrintWriter(output, true);
+        final PrintWriter err = new PrintWriter(errors, true);
+
+        return ThanosCli.create(segmenter, () -> windowOpened.set(true), out, err)
+                .execute(arguments);
     }
 }

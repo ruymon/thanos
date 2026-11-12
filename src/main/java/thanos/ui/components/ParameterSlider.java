@@ -1,12 +1,14 @@
 package thanos.ui.components;
 
+import thanos.ui.Theme;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
-import thanos.ui.Theme;
 
 public final class ParameterSlider extends JPanel {
 
@@ -18,8 +20,10 @@ public final class ParameterSlider extends JPanel {
     private final JSlider slider;
     private final JLabel value = new JLabel();
 
-    /** @param whenReleased called once the user lets go of the slider at a new value */
-    public ParameterSlider(String name, int minimum, int maximum, int initial, Runnable whenReleased) {
+    /**
+     * @param onRelease called once the user lets go of the slider at a new value
+     */
+    public ParameterSlider(String name, int minimum, int maximum, int initial, Runnable onRelease) {
         super(new BorderLayout(Theme.SPACE_MD, 0));
         setOpaque(false);
 
@@ -38,7 +42,7 @@ public final class ParameterSlider extends JPanel {
             value.setText(String.valueOf(slider.getValue()));
 
             if (!slider.getValueIsAdjusting()) {
-                whenReleased.run();
+                onRelease.run();
             }
         });
 

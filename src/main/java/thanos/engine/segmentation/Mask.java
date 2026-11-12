@@ -73,16 +73,19 @@ public final class Mask {
     }
 
     public BufferedImage cutOut(BufferedImage photo) {
-        final Mask fitted = scaledTo(photo.getWidth(), photo.getHeight());
-        final int[] alpha = fitted.alphaChannel();
-        final int[] pixels = photo.getRGB(0, 0, fitted.width, fitted.height, null, 0, fitted.width);
+        return scaledTo(photo.getWidth(), photo.getHeight()).makeBackgroundTransparent(photo);
+    }
+
+    private BufferedImage makeBackgroundTransparent(BufferedImage photo) {
+        final int[] alpha = alphaChannel();
+        final int[] pixels = photo.getRGB(0, 0, width, height, null, 0, width);
 
         for (int index = 0; index < pixels.length; index++) {
             pixels[index] = (alpha[index] << 24) | (pixels[index] & 0x00FFFFFF);
         }
 
-        final BufferedImage cutout = new BufferedImage(fitted.width, fitted.height, BufferedImage.TYPE_INT_ARGB);
-        cutout.setRGB(0, 0, fitted.width, fitted.height, pixels, 0, fitted.width);
+        final BufferedImage cutout = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        cutout.setRGB(0, 0, width, height, pixels, 0, width);
 
         return cutout;
     }
@@ -118,7 +121,9 @@ public final class Mask {
         }
     }
 
-    /** Replaces each value on a line with the mean of its neighbours within {@code edgeSoftness}. */
+    /**
+     * Replaces each value on a line with the mean of its neighbours within {@code edgeSoftness}.
+     */
     private void averageLine(int[] from, int[] to, int start, int step, int length) {
         int sum = 0;
         int count = 0;

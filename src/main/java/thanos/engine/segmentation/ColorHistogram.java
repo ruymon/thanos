@@ -14,7 +14,10 @@ final class ColorHistogram {
     private static final int CHANNEL_LEVELS = 256;
     private static final int BIN_COUNT = BINS * BINS * BINS;
 
-    /** Every bin starts with one imaginary sample, so an unseen colour is unlikely, never impossible. */
+    /**
+     * Every bin starts with one imaginary sample, so an unseen colour is unlikely, never
+     * impossible.
+     */
     private static final int PRIOR_SAMPLES_PER_BIN = 1;
 
     private final int[] samples = new int[BIN_COUNT];

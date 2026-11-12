@@ -11,4 +11,9 @@ package thanos.engine.segmentation;
  * @param elapsedMillis wall-clock time of the whole snap
  */
 public record SnapStats(
-        int workingWidth, int workingHeight, int vertexCount, int edgeCount, long cutValue, long elapsedMillis) {}
+        int workingWidth,
+        int workingHeight,
+        int vertexCount,
+        int edgeCount,
+        long cutValue,
+        long elapsedMillis) {}
