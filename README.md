@@ -112,7 +112,7 @@ thanos/
 │   ├── cli/                   # `thanos` and `thanos cut` (picocli), in English
 │   └── ui/                    # `thanos ui` (Swing + FlatLaf), in Portuguese
 ├── src/test/java/thanos/      # JUnit tests, including the dependency rules
-├── samples/                   # Four photos, each with its scribbles and cutout
+├── samples/                   # Demo photos, each with its scribbles, cutout and command
 ├── lib/                       # picocli, FlatLaf, JUnit
 └── .docs/                     # Scope, graph model, roadmap, decisions
 ```
