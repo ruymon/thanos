@@ -3,3 +3,8 @@ out/
 .DS_Store
 .idea/
 *.iml
+
+# Demo photos kept only on this machine
+samples/professor/
+samples/mike/
+samples/chupeta/
