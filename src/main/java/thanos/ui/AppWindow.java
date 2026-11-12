@@ -45,7 +45,7 @@ public final class AppWindow extends JFrame {
     private static final long serialVersionUID = 1L;
 
     private static final String MAC_APP_NAME_PROPERTY = "apple.awt.application.name";
-    private static final int SMOOTHNESS_MAX = 200;
+    private static final int SMOOTHNESS_MAX = 400;
     private static final int EDGE_SENSITIVITY_MIN = 1;
     private static final int EDGE_SENSITIVITY_MAX = 100;
     private static final double MILLIS_PER_SECOND = 1000.0;

@@ -17,4 +17,4 @@ if [ ! -d "$HOME_DIR/out/main" ]; then
     "$HOME_DIR/build" > /dev/null
 fi
 
-exec java -cp "$HOME_DIR/out/main:$HOME_DIR/lib/*" thanos.Main "$@"
+exec java --enable-native-access=ALL-UNNAMED -cp "$HOME_DIR/out/main:$HOME_DIR/lib/*" thanos.Main "$@"

@@ -8,7 +8,7 @@ Maximum flow is computed with Dinic's algorithm (BFS level graph, then blocking 
 
 ## Considered options
 
-- **Edmonds-Karp** (`O(V·E²)`): the simplest, and the one taught first. Too slow at 120,000 vertices. Kept as the planned baseline for a timing comparison.
+- **Edmonds-Karp** (`O(V·E²)`): the simplest, and the one taught first. Too slow at 120,000 vertices. Implemented as the second solver: the tests run every case against both and compare them on random networks.
 - **Boykov-Kolmogorov**: designed for exactly this kind of graph and usually the fastest in practice. Much harder to implement and to explain, with a worse theoretical bound.
 - **Push-relabel**: fast, but its behaviour is hard to show step by step in a presentation.
 - **Dinic (chosen)** (`O(V²·E)`, far better in practice on grids).

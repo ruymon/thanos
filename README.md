@@ -56,7 +56,67 @@ Both tuning parameters have two names:
 
 ## Getting started
 
-_Coming with the first build._
+Requires Java 17 or newer. Nothing else to install: the three jars are in `lib/`.
+
+```bash
+./build
+```
+
+```bash
+./thanos
+```
+
+Try it on the sample photo, from the terminal:
+
+```bash
+./thanos cut samples/astronaut.png --scribbles samples/astronaut-scribbles.png --out astronaut-cutout.png
+```
+
+Or in the window:
+
+```bash
+./thanos ui
+```
+
+1. **Open image**.
+2. Drag over the subject with the **Subject** brush and over the background with the **Background** brush. A few rough strokes are enough.
+3. **Snap**.
+4. Missing a piece? Scribble over it and snap again. Moving a slider re-runs the cut.
+5. **Export PNG**.
+
+Run the tests:
+
+```bash
+./test
+```
+
+To call `thanos` from any folder, link the launcher into a folder on your `PATH`:
+
+```bash
+ln -s "$(pwd)/thanos" /usr/local/bin/thanos
+```
+
+---
+
+## Project structure
+
+```
+thanos/
+├── src/main/java/thanos/
+│   ├── Main.java          # Wires the engine to the two front ends
+│   ├── config/            # Constants: working size, defaults, names
+│   ├── graph/             # Flow network, Dinic, Edmonds-Karp, minimum cut
+│   ├── segmentation/      # Photo + scribbles + parameters → mask
+│   ├── image/             # Read, write and resize images
+│   ├── cli/               # `thanos` and `thanos cut` (picocli)
+│   └── ui/                # `thanos ui` (Swing + FlatLaf)
+├── src/test/java/thanos/  # JUnit tests, including the dependency rules
+├── samples/               # Photos and scribbles to try
+├── lib/                   # picocli, FlatLaf, JUnit
+└── .docs/                 # Scope, graph model, roadmap, decisions
+```
+
+Dependencies point one way: `cli` / `ui` → `segmentation` → `graph`. The `graph` package knows nothing about images, and a test fails the build if that ever changes.
 
 ---
 
