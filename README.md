@@ -27,7 +27,7 @@ Full model in [.docs/graph-model.md](.docs/graph-model.md).
 | Layer | Technology |
 |---|---|
 | Language | Java 17+ |
-| Engine (graph, segmentation, image) | JDK only, no libraries |
+| Engine (`engine/`: graph, segmentation, image) | JDK only, no libraries |
 | Command line | picocli |
 | Window | Swing (hand-coded) + FlatLaf |
 | Tests | JUnit 5 |
@@ -103,17 +103,18 @@ ln -s "$(pwd)/thanos" /usr/local/bin/thanos
 ```
 thanos/
 ├── src/main/java/thanos/
-│   ├── Main.java          # Wires the engine to the two front ends
-│   ├── config/            # Constants: working size, defaults, names
-│   ├── graph/             # Flow network, Dinic, Edmonds-Karp, minimum cut
-│   ├── segmentation/      # Photo + scribbles + parameters → mask
-│   ├── image/             # Read, write and resize images
-│   ├── cli/               # `thanos` and `thanos cut` (picocli)
-│   └── ui/                # `thanos ui` (Swing + FlatLaf)
-├── src/test/java/thanos/  # JUnit tests, including the dependency rules
-├── samples/               # Photos and scribbles to try
-├── lib/                   # picocli, FlatLaf, JUnit
-└── .docs/                 # Scope, graph model, roadmap, decisions
+│   ├── Main.java              # Wires the engine to the two front ends
+│   ├── config/                # Constants: working size, defaults, names
+│   ├── engine/
+│   │   ├── graph/             # Flow network, Dinic, Edmonds-Karp, minimum cut
+│   │   ├── segmentation/      # Photo + scribbles + parameters → mask
+│   │   └── image/             # Read, write and resize images
+│   ├── cli/                   # `thanos` and `thanos cut` (picocli), in English
+│   └── ui/                    # `thanos ui` (Swing + FlatLaf), in Portuguese
+├── src/test/java/thanos/      # JUnit tests, including the dependency rules
+├── samples/                   # A photo, its scribbles and the cutout
+├── lib/                       # picocli, FlatLaf, JUnit
+└── .docs/                     # Scope, graph model, roadmap, decisions
 ```
 
 Dependencies point one way: `cli` / `ui` → `segmentation` → `graph`. The `graph` package knows nothing about images, and a test fails the build if that ever changes.

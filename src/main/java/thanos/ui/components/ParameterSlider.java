@@ -8,7 +8,6 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import thanos.ui.Theme;
 
-/** A labelled slider that shows its current value. */
 public final class ParameterSlider extends JPanel {
 
     private static final long serialVersionUID = 1L;

@@ -5,7 +5,6 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Spec;
 import thanos.config.AppConfig;
 
-/** {@code thanos} on its own: prints the help. */
 @Command(
         name = AppConfig.COMMAND_NAME,
         version = AppConfig.APP_NAME + " " + AppConfig.VERSION,

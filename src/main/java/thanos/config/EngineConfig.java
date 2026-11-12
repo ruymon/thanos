@@ -1,6 +1,5 @@
 package thanos.config;
 
-/** Tuning constants of the engine. Every number the cut depends on lives here. */
 public final class EngineConfig {
 
     /** Longest side, in pixels, of the copy the cut runs on (ADR 0004). */

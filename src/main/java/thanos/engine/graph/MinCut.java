@@ -1,4 +1,4 @@
-package thanos.graph;
+package thanos.engine.graph;
 
 /**
  * The cheapest set of edges whose removal disconnects the source from the sink.
@@ -16,12 +16,10 @@ public final class MinCut {
         this.onSourceSide = onSourceSide;
     }
 
-    /** Total capacity of the cut edges, equal to the maximum flow. */
     public long value() {
         return value;
     }
 
-    /** Whether {@code vertex} can still be reached from the source once the cut edges are gone. */
     public boolean isOnSourceSide(int vertex) {
         return onSourceSide[vertex];
     }

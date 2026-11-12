@@ -12,4 +12,5 @@ A single launcher, `thanos`, dispatches to them as subcommands: `thanos` alone p
 
 - Both parameters have two names everywhere they are exposed. The user-facing name says what it does (`--smoothness`, `--edge-sensitivity`, and the slider labels). The maths name matches the formula on the slides (`--lambda`, `--sigma`). They are aliases of the same option.
 - In the terminal there is no way to draw, so scribbles arrive as an image file. The window can save its scribbles in that format.
+- The window speaks Portuguese, for the classroom it is shown in. The command line and the code stay in English. Every window text lives in one class, `ui/Texts`.
 - Default parameter values live in one place and are shared by both front ends.

@@ -6,7 +6,6 @@ import java.awt.RenderingHints;
 import javax.swing.JComponent;
 import thanos.ui.Theme;
 
-/** A muted line of text in the middle of a panel that has nothing to show yet. */
 final class EmptyMessage {
 
     private EmptyMessage() {}

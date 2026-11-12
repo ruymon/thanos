@@ -6,13 +6,12 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
+import thanos.ui.Texts;
 import thanos.ui.Theme;
 
-/** Shows the cutout over a checkerboard, so transparency is visible. */
 public final class CutoutView extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static final String EMPTY_MESSAGE = "Scribble, then snap";
 
     private transient BufferedImage cutout;
 
@@ -33,7 +32,7 @@ public final class CutoutView extends JPanel {
         final Graphics2D canvas = (Graphics2D) graphics.create();
 
         if (cutout == null) {
-            EmptyMessage.paint(canvas, this, EMPTY_MESSAGE);
+            EmptyMessage.paint(canvas, this, Texts.CUTOUT_EMPTY);
             canvas.dispose();
             return;
         }

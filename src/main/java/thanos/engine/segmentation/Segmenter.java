@@ -1,10 +1,10 @@
-package thanos.segmentation;
+package thanos.engine.segmentation;
 
 import java.awt.image.BufferedImage;
 import thanos.config.EngineConfig;
-import thanos.graph.MaxFlowSolver;
-import thanos.graph.MinCut;
-import thanos.image.ImageScaler;
+import thanos.engine.graph.MaxFlowSolver;
+import thanos.engine.graph.MinCut;
+import thanos.engine.image.ImageScaler;
 
 /**
  * Separates the subject of a photo from its background.

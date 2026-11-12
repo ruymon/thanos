@@ -13,15 +13,14 @@ import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 import thanos.config.AppConfig;
 import thanos.config.EngineConfig;
-import thanos.image.ImageFiles;
-import thanos.segmentation.CutParameters;
-import thanos.segmentation.Mask;
-import thanos.segmentation.Scribbles;
-import thanos.segmentation.SnapResult;
-import thanos.segmentation.SnapStats;
-import thanos.segmentation.Segmenter;
+import thanos.engine.image.ImageFiles;
+import thanos.engine.segmentation.CutParameters;
+import thanos.engine.segmentation.Mask;
+import thanos.engine.segmentation.Scribbles;
+import thanos.engine.segmentation.SnapResult;
+import thanos.engine.segmentation.SnapStats;
+import thanos.engine.segmentation.Segmenter;
 
-/** {@code thanos cut}: cuts a photo from the terminal. */
 @Command(
         name = "cut",
         description = "Cut the subject out of a photo and save it as a transparent PNG.",

@@ -1,4 +1,4 @@
-package thanos.segmentation;
+package thanos.engine.segmentation;
 
 import thanos.config.EngineConfig;
 

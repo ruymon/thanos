@@ -11,11 +11,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 import javax.swing.JPanel;
-import thanos.image.ImageScaler;
-import thanos.segmentation.Scribbles;
+import thanos.engine.image.ImageScaler;
+import thanos.engine.segmentation.Scribbles;
+import thanos.ui.Texts;
 import thanos.ui.Theme;
 
-/** Shows the photo and lets the user scribble over it. */
 public final class ScribbleCanvas extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -26,7 +26,6 @@ public final class ScribbleCanvas extends JPanel {
     private static final float BRUSH_SCREEN_WIDTH = 9f;
     private static final float ERASER_SCREEN_WIDTH = 24f;
     private static final float SCRIBBLE_OPACITY = 0.85f;
-    private static final String EMPTY_MESSAGE = "Open an image to start";
 
     private transient BufferedImage photo;
     private transient BufferedImage scribbleLayer;
@@ -53,7 +52,6 @@ public final class ScribbleCanvas extends JPanel {
         addMouseMotionListener(drawing);
     }
 
-    /** Shows a new photo and discards the scribbles of the previous one. */
     public void setPhoto(BufferedImage newPhoto) {
         photo = ImageScaler.fitWithin(newPhoto, MAX_DRAWING_SIDE);
         scribbleLayer = new BufferedImage(photo.getWidth(), photo.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -73,7 +71,6 @@ public final class ScribbleCanvas extends JPanel {
         repaint();
     }
 
-    /** The scribbles drawn so far, empty until a photo is open. */
     public Optional<Scribbles> findScribbles() {
         if (scribbleLayer == null) {
             return Optional.empty();
@@ -89,7 +86,7 @@ public final class ScribbleCanvas extends JPanel {
         final Graphics2D canvas = (Graphics2D) graphics.create();
 
         if (photo == null) {
-            EmptyMessage.paint(canvas, this, EMPTY_MESSAGE);
+            EmptyMessage.paint(canvas, this, Texts.CANVAS_EMPTY);
             canvas.dispose();
             return;
         }

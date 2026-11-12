@@ -16,17 +16,22 @@ class ArchitectureTest {
 
     @Test
     void graphDependsOnNothingButTheJdk() throws IOException {
-        assertImportsOnly("graph", "java.util.", "thanos.graph.");
+        assertImportsOnly("engine/graph", "java.util.", "thanos.engine.graph.");
     }
 
     @Test
     void segmentationDependsOnlyOnTheEngine() throws IOException {
-        assertImportsOnly("segmentation", "java.", "thanos.segmentation.", "thanos.graph.", "thanos.image.", "thanos.config.");
+        assertImportsOnly("engine/segmentation", "java.", "thanos.engine.", "thanos.config.");
     }
 
     @Test
     void imageDependsOnNothingButTheJdk() throws IOException {
-        assertImportsOnly("image", "java.", "javax.imageio.");
+        assertImportsOnly("engine/image", "java.", "javax.imageio.");
+    }
+
+    @Test
+    void engineUsesNoLibraryAndNoFrontEnd() throws IOException {
+        assertImportsOnly("engine", "java.", "javax.imageio.", "thanos.engine.", "thanos.config.");
     }
 
     @Test
@@ -36,7 +41,7 @@ class ArchitectureTest {
 
     @Test
     void windowDoesNotKnowTheCommandLine() throws IOException {
-        assertNeverImports("ui", "thanos.cli.", "picocli.", "thanos.graph.");
+        assertNeverImports("ui", "thanos.cli.", "picocli.", "thanos.engine.graph.");
     }
 
     private static void assertImportsOnly(String packageName, String... allowedPrefixes) throws IOException {

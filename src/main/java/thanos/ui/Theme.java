@@ -3,7 +3,6 @@ package thanos.ui;
 import java.awt.Color;
 import java.awt.Font;
 
-/** Colours, sizes and fonts of the window. */
 public final class Theme {
 
     public static final Color BG_WINDOW = new Color(0xFAFAF7);

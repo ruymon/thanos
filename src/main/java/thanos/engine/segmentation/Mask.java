@@ -1,4 +1,4 @@
-package thanos.segmentation;
+package thanos.engine.segmentation;
 
 import java.awt.image.BufferedImage;
 
@@ -52,7 +52,6 @@ public final class Mask {
         return count;
     }
 
-    /** The same mask on a grid of another size. */
     public Mask scaledTo(int newWidth, int newHeight) {
         if (newWidth == width && newHeight == height) {
             return this;
@@ -73,7 +72,6 @@ public final class Mask {
         return new Mask(newWidth, newHeight, scaled, enlargement / 2);
     }
 
-    /** The photo with every background pixel made transparent. */
     public BufferedImage cutOut(BufferedImage photo) {
         final Mask fitted = scaledTo(photo.getWidth(), photo.getHeight());
         final int[] alpha = fitted.alphaChannel();

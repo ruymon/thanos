@@ -1,4 +1,4 @@
-package thanos.graph;
+package thanos.engine.graph;
 
 /**
  * Dinic's algorithm, {@code O(V²·E)}.

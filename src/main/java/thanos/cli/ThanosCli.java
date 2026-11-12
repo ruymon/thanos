@@ -2,9 +2,8 @@ package thanos.cli;
 
 import java.io.PrintWriter;
 import picocli.CommandLine;
-import thanos.segmentation.Segmenter;
+import thanos.engine.segmentation.Segmenter;
 
-/** The command-line front end: parses the arguments and runs the matching command. */
 public final class ThanosCli {
 
     private ThanosCli() {}

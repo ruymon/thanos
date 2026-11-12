@@ -1,6 +1,5 @@
-package thanos.graph;
+package thanos.engine.graph;
 
-/** Finds the maximum flow of a flow network, and with it the minimum cut. */
 public interface MaxFlowSolver {
 
     /**

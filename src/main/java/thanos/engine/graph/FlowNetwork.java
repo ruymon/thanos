@@ -1,4 +1,4 @@
-package thanos.graph;
+package thanos.engine.graph;
 
 import java.util.Arrays;
 
@@ -45,12 +45,10 @@ public final class FlowNetwork {
         Arrays.fill(firstEdge, NO_EDGE);
     }
 
-    /** Adds an edge that carries up to {@code capacity} from {@code from} to {@code to}. */
     public void addEdge(int from, int to, int capacity) {
         addEdgePair(from, to, capacity, 0);
     }
 
-    /** Adds an edge that carries up to {@code capacity} in either direction. */
     public void addUndirectedEdge(int a, int b, int capacity) {
         addEdgePair(a, b, capacity, capacity);
     }
@@ -80,7 +78,6 @@ public final class FlowNetwork {
         return capacity[edge];
     }
 
-    /** Sends {@code amount} along {@code edge}: its residual shrinks, its reverse's grows. */
     void push(int edge, int amount) {
         capacity[edge] -= amount;
         capacity[edge ^ 1] += amount;

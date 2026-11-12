@@ -28,18 +28,19 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import thanos.config.AppConfig;
 import thanos.config.EngineConfig;
-import thanos.image.ImageFiles;
-import thanos.segmentation.CutParameters;
-import thanos.segmentation.Scribbles;
-import thanos.segmentation.Segmenter;
-import thanos.segmentation.SnapResult;
-import thanos.segmentation.SnapStats;
+import thanos.engine.image.ImageFiles;
+import thanos.engine.segmentation.CutParameters;
+import thanos.engine.segmentation.Label;
+import thanos.engine.segmentation.MissingScribblesException;
+import thanos.engine.segmentation.Scribbles;
+import thanos.engine.segmentation.Segmenter;
+import thanos.engine.segmentation.SnapResult;
+import thanos.engine.segmentation.SnapStats;
 import thanos.ui.components.Brush;
 import thanos.ui.components.CutoutView;
 import thanos.ui.components.ParameterSlider;
 import thanos.ui.components.ScribbleCanvas;
 
-/** The window front end: open a photo, scribble, snap, refine, export. */
 public final class AppWindow extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -51,13 +52,14 @@ public final class AppWindow extends JFrame {
     private static final double MILLIS_PER_SECOND = 1000.0;
     private static final Dimension SNAP_BUTTON_SIZE = new Dimension(120, 56);
     private static final String PNG_EXTENSION = ".png";
+    private static final Locale PORTUGUESE = Locale.forLanguageTag("pt-BR");
 
     private final transient Segmenter segmenter;
 
     private final ScribbleCanvas canvas = new ScribbleCanvas();
     private final CutoutView cutoutView = new CutoutView();
     private final JLabel status = new JLabel(" ");
-    private final JButton snapButton = new JButton("Snap");
+    private final JButton snapButton = new JButton(Texts.SNAP);
     private final ParameterSlider smoothness;
     private final ParameterSlider edgeSensitivity;
 
@@ -69,9 +71,9 @@ public final class AppWindow extends JFrame {
         super(AppConfig.APP_NAME);
         this.segmenter = segmenter;
         this.smoothness = new ParameterSlider(
-                "Smoothness (λ)", 0, SMOOTHNESS_MAX, (int) EngineConfig.DEFAULT_SMOOTHNESS, this::snapAgain);
+                Texts.SMOOTHNESS, 0, SMOOTHNESS_MAX, (int) EngineConfig.DEFAULT_SMOOTHNESS, this::snapAgain);
         this.edgeSensitivity = new ParameterSlider(
-                "Edge sensitivity (σ)",
+                Texts.EDGE_SENSITIVITY,
                 EDGE_SENSITIVITY_MIN,
                 EDGE_SENSITIVITY_MAX,
                 (int) EngineConfig.DEFAULT_EDGE_SENSITIVITY,
@@ -99,9 +101,9 @@ public final class AppWindow extends JFrame {
     }
 
     private JComponent createToolbar() {
-        final JToggleButton subjectBrush = createBrushButton("Subject", Brush.SUBJECT, Theme.SUBJECT);
-        final JToggleButton backgroundBrush = createBrushButton("Background", Brush.BACKGROUND, Theme.BACKGROUND);
-        final JToggleButton eraser = createBrushButton("Eraser", Brush.ERASER, Theme.TEXT_PRIMARY);
+        final JToggleButton subjectBrush = createBrushButton(Texts.SUBJECT_BRUSH, Brush.SUBJECT, Theme.SUBJECT);
+        final JToggleButton backgroundBrush = createBrushButton(Texts.BACKGROUND_BRUSH, Brush.BACKGROUND, Theme.BACKGROUND);
+        final JToggleButton eraser = createBrushButton(Texts.ERASER, Brush.ERASER, Theme.TEXT_PRIMARY);
 
         final ButtonGroup brushes = new ButtonGroup();
         brushes.add(subjectBrush);
@@ -110,16 +112,16 @@ public final class AppWindow extends JFrame {
         subjectBrush.setSelected(true);
 
         final JPanel left = createRow(FlowLayout.LEFT);
-        left.add(createButton("Open image", this::openPhoto));
+        left.add(createButton(Texts.OPEN_IMAGE, this::openPhoto));
         left.add(Box.createHorizontalStrut(Theme.SPACE_MD));
         left.add(subjectBrush);
         left.add(backgroundBrush);
         left.add(eraser);
-        left.add(createButton("Clear", this::clearScribbles));
+        left.add(createButton(Texts.CLEAR, this::clearScribbles));
 
         final JPanel right = createRow(FlowLayout.RIGHT);
-        right.add(createButton("Save scribbles", this::saveScribbles));
-        right.add(createButton("Export PNG", this::exportCutout));
+        right.add(createButton(Texts.SAVE_SCRIBBLES, this::saveScribbles));
+        right.add(createButton(Texts.EXPORT_PNG, this::exportCutout));
 
         final JPanel toolbar = new JPanel(new BorderLayout());
         toolbar.setBackground(Theme.BG_PANEL);
@@ -134,8 +136,8 @@ public final class AppWindow extends JFrame {
         final JPanel workspace = new JPanel(new GridLayout(1, 2, Theme.SPACE_MD, 0));
         workspace.setOpaque(false);
         workspace.setBorder(BorderFactory.createEmptyBorder(Theme.SPACE_MD, Theme.SPACE_LG, Theme.SPACE_MD, Theme.SPACE_LG));
-        workspace.add(createTitledPane("Original + scribbles", canvas));
-        workspace.add(createTitledPane("Cutout", cutoutView));
+        workspace.add(createTitledPane(Texts.ORIGINAL_PANE, canvas));
+        workspace.add(createTitledPane(Texts.CUTOUT_PANE, cutoutView));
 
         return workspace;
     }
@@ -215,7 +217,7 @@ public final class AppWindow extends JFrame {
     }
 
     private void openPhoto() {
-        final FileDialog dialog = new FileDialog(this, "Open image", FileDialog.LOAD);
+        final FileDialog dialog = new FileDialog(this, Texts.OPEN_IMAGE, FileDialog.LOAD);
         dialog.setVisible(true);
 
         if (dialog.getFile() == null) {
@@ -228,9 +230,9 @@ public final class AppWindow extends JFrame {
             cutout = null;
             canvas.setPhoto(photo);
             cutoutView.setCutout(null);
-            showStatus("Scribble over the subject and over the background, then snap.");
+            showStatus(Texts.READY_TO_SCRIBBLE);
         } catch (IOException failure) {
-            showError(failure.getMessage());
+            showError(Texts.CANNOT_OPEN);
         }
     }
 
@@ -243,7 +245,7 @@ public final class AppWindow extends JFrame {
         final Optional<Scribbles> scribbles = canvas.findScribbles();
 
         if (photo == null || scribbles.isEmpty()) {
-            showError("Open an image first.");
+            showError(Texts.NO_PHOTO);
             return;
         }
 
@@ -251,7 +253,7 @@ public final class AppWindow extends JFrame {
         final CutParameters parameters = new CutParameters(smoothness.value(), edgeSensitivity.value());
 
         snapButton.setEnabled(false);
-        showStatus("Snapping…");
+        showStatus(Texts.SNAPPING);
 
         new SwingWorker<Snapped, Void>() {
             @Override
@@ -277,15 +279,15 @@ public final class AppWindow extends JFrame {
             cutout = snapped.cutout();
             cutoutView.setCutout(cutout);
             showStatus(String.format(
-                    Locale.ROOT,
-                    "Cut in %.2f s  ·  %,d vertices  ·  %,d edges  ·  %d × %d px",
+                    PORTUGUESE,
+                    Texts.SNAP_REPORT,
                     stats.elapsedMillis() / MILLIS_PER_SECOND,
                     stats.vertexCount(),
                     stats.edgeCount(),
                     stats.workingWidth(),
                     stats.workingHeight()));
         } catch (ExecutionException failure) {
-            showError(failure.getCause().getMessage());
+            showError(describe(failure.getCause()));
         } catch (InterruptedException interrupted) {
             Thread.currentThread().interrupt();
         }
@@ -302,20 +304,20 @@ public final class AppWindow extends JFrame {
         final Optional<Scribbles> scribbles = canvas.findScribbles();
 
         if (scribbles.isEmpty()) {
-            showError("Open an image first.");
+            showError(Texts.NO_PHOTO);
             return;
         }
 
-        saveImage(scribbles.get().toImage(), photoName + "-scribbles" + PNG_EXTENSION, "Save scribbles");
+        saveImage(scribbles.get().toImage(), photoName + Texts.SCRIBBLES_SUFFIX, Texts.SAVE_SCRIBBLES);
     }
 
     private void exportCutout() {
         if (cutout == null) {
-            showError("Snap first: there is no cutout to export yet.");
+            showError(Texts.NO_CUTOUT);
             return;
         }
 
-        saveImage(cutout, photoName + AppConfig.CUTOUT_SUFFIX, "Export PNG");
+        saveImage(cutout, photoName + AppConfig.CUTOUT_SUFFIX, Texts.EXPORT_PNG);
     }
 
     private void saveImage(BufferedImage image, String suggestedName, String title) {
@@ -334,9 +336,9 @@ public final class AppWindow extends JFrame {
 
         try {
             ImageFiles.writePng(image, file);
-            showStatus("Saved " + file);
+            showStatus(String.format(Texts.SAVED, file));
         } catch (IOException failure) {
-            showError(failure.getMessage());
+            showError(Texts.CANNOT_SAVE);
         }
     }
 
@@ -348,6 +350,14 @@ public final class AppWindow extends JFrame {
     private void showError(String message) {
         status.setForeground(Theme.TEXT_DANGER);
         status.setText(message);
+    }
+
+    private static String describe(Throwable failure) {
+        if (failure instanceof MissingScribblesException missing) {
+            return missing.missing() == Label.SUBJECT ? Texts.MISSING_SUBJECT : Texts.MISSING_BACKGROUND;
+        }
+
+        return Texts.SNAP_FAILED;
     }
 
     private static String stemOf(String fileName) {

@@ -1,7 +1,7 @@
-package thanos.segmentation;
+package thanos.engine.segmentation;
 
 import thanos.config.EngineConfig;
-import thanos.graph.FlowNetwork;
+import thanos.engine.graph.FlowNetwork;
 
 /**
  * A photo as a flow network: one vertex per pixel, plus a source for the subject and a sink for

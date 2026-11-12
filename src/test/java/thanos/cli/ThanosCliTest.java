@@ -16,10 +16,10 @@ import javax.imageio.ImageIO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import thanos.graph.DinicMaxFlow;
-import thanos.segmentation.Label;
-import thanos.segmentation.Scribbles;
-import thanos.segmentation.Segmenter;
+import thanos.engine.graph.DinicMaxFlow;
+import thanos.engine.segmentation.Label;
+import thanos.engine.segmentation.Scribbles;
+import thanos.engine.segmentation.Segmenter;
 
 class ThanosCliTest {
 

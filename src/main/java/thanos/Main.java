@@ -1,11 +1,10 @@
 package thanos;
 
 import thanos.cli.ThanosCli;
-import thanos.graph.DinicMaxFlow;
-import thanos.segmentation.Segmenter;
+import thanos.engine.graph.DinicMaxFlow;
+import thanos.engine.segmentation.Segmenter;
 import thanos.ui.AppWindow;
 
-/** Wires the engine to its two front ends. */
 public final class Main {
 
     private static final String WINDOW_COMMAND = "ui";
@@ -14,6 +13,7 @@ public final class Main {
     private Main() {}
 
     public static void main(String[] args) {
+        // Without this, macOS shows a Dock icon for every terminal command that touches an image.
         if (!opensTheWindow(args)) {
             System.setProperty(HEADLESS_PROPERTY, Boolean.TRUE.toString());
         }

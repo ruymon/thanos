@@ -1,6 +1,5 @@
 package thanos.config;
 
-/** Names and labels shared by the command line and the window. */
 public final class AppConfig {
 
     public static final String APP_NAME = "Thanos";

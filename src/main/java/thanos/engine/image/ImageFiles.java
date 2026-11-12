@@ -1,4 +1,4 @@
-package thanos.image;
+package thanos.engine.image;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import javax.imageio.ImageIO;
 
-/** Reads and writes image files. */
 public final class ImageFiles {
 
     private static final String PNG = "png";

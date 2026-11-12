@@ -8,6 +8,7 @@ The `graph` package solves maximum flow on a flow network and nothing else: no p
 
 ## Consequences
 
+- The three packages live together under `engine/`, apart from the two front ends.
 - `graph` can be reused for any other flow problem (matching, scheduling) without touching it.
 - Anything that needs to know "this vertex is the pixel at (x, y)" lives in `segmentation`, never in `graph`.
-- A class in `graph` that imports `java.awt` or `thanos.segmentation` is a bug.
+- A class in `graph` that imports `java.awt` or `thanos.engine.segmentation` is a bug.

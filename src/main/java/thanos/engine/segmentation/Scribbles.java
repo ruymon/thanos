@@ -1,4 +1,4 @@
-package thanos.segmentation;
+package thanos.engine.segmentation;
 
 import java.awt.image.BufferedImage;
 
@@ -31,7 +31,6 @@ public final class Scribbles {
         this.labels = new byte[width * height];
     }
 
-    /** Reads scribbles drawn on a transparent image, as saved by {@link #toImage()}. */
     public static Scribbles fromImage(BufferedImage image) {
         final Scribbles scribbles = new Scribbles(image.getWidth(), image.getHeight());
 
@@ -91,7 +90,6 @@ public final class Scribbles {
         return scaled;
     }
 
-    /** A transparent image with subject scribbles in red and background scribbles in blue. */
     public BufferedImage toImage() {
         final BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 

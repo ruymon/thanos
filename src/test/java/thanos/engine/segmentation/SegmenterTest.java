@@ -1,4 +1,4 @@
-package thanos.segmentation;
+package thanos.engine.segmentation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import org.junit.jupiter.api.Test;
-import thanos.graph.DinicMaxFlow;
+import thanos.engine.graph.DinicMaxFlow;
 
 class SegmenterTest {
 

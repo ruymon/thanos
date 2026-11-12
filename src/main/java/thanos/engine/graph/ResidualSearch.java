@@ -1,4 +1,4 @@
-package thanos.graph;
+package thanos.engine.graph;
 
 import java.util.Arrays;
 
@@ -15,20 +15,14 @@ final class ResidualSearch {
         this.queue = new int[network.vertexCount()];
     }
 
-    /**
-     * Distance in edges from {@code source} to every vertex, {@link #UNREACHED} where there is no
-     * path with free capacity.
-     */
     int[] findLevels(int source) {
         final int[] level = new int[network.vertexCount()];
-        Arrays.fill(level, UNREACHED);
         fillLevels(source, level);
 
         return level;
     }
 
-    /** Same as {@link #findLevels(int)}, reusing {@code level}. Returns how many vertices were reached. */
-    int fillLevels(int source, int[] level) {
+    void fillLevels(int source, int[] level) {
         Arrays.fill(level, UNREACHED);
 
         int head = 0;
@@ -48,8 +42,6 @@ final class ResidualSearch {
                 }
             }
         }
-
-        return tail;
     }
 
     /** The minimum cut once no more flow fits: vertices still reachable from the source are its side. */

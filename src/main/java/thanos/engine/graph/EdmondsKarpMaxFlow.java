@@ -1,4 +1,4 @@
-package thanos.graph;
+package thanos.engine.graph;
 
 import java.util.Arrays;
 
