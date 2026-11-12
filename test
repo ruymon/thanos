@@ -6,13 +6,14 @@ cd "$(dirname "$0")"
 ./build > /dev/null
 
 JUNIT=$(ls lib/test/junit-platform-console-standalone-*.jar)
+LIBS=$(ls lib/*.jar | tr '\n' ':')
 
 rm -rf out/test
 mkdir -p out/test
 javac --release 17 -cp "out/main:lib/*:$JUNIT" -d out/test $(find src/test/java -name "*.java")
 
 java -jar "$JUNIT" execute \
-    --class-path "out/main:out/test:lib/*" \
+    --class-path "out/main:out/test:$LIBS" \
     --scan-class-path out/test \
     --disable-banner \
     --details=tree \
